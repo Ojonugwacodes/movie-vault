@@ -1,6 +1,6 @@
-# Movie Watchlist API
+# movie-vault
 
-A RESTful API for managing a personal movie watchlist, built with Node.js, Express, PostgreSQL, and Prisma ORM. Features JWT authentication, request validation with Zod, and interactive Swagger documentation.
+movie-vault is an AI-powered movie watchlist and recommendation API that allows users to track movies they’ve watched, manage personalized watchlists, and receive intelligent movie recommendations based on their viewing history and preferences. The recommendation engine is powered by OpenAI’s GPT-4o, which analyzes user watch history and liked movies to generate personalized suggestions with explanations. Built with Node.js, Express, PostgreSQL, and Prisma ORM, it features JWT authentication, request validation with Zod, and interactive Swagger documentation.
 
 **Live Demo:** https://movie-watchlist-api-axno.onrender.com
 
@@ -13,6 +13,7 @@ A RESTful API for managing a personal movie watchlist, built with Node.js, Expre
 - **Authentication:** JWT (JSON Web Tokens) via cookies and Bearer tokens
 - **Validation:** Zod
 - **Docs:** Swagger UI
+- **AI Integration:** OpenAI GPT-4o (for personalized movie recommendations based on watch history and user preferences)
 
 ## Getting Started
 
