@@ -1,9 +1,9 @@
-import 'dotenv/config';
+/* import 'dotenv/config';
 import { PrismaClient } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
 
 const prisma = new PrismaClient({
-    accelerateUrl: process.env.DATABASE_URL,
+  accelerateUrl: process.env.DATABASE_URL,
 }).$extends(withAccelerate());
 
 const creatorId = process.env.CREATOR_ID;
@@ -106,15 +106,13 @@ const movies = [
 ];
 
 const main = async () => {
-    console.log("Seeding database with movies...");
-    for (const movie of movies) {
-        await prisma.movie.create({
-            data: movie,
-        });
-        console.log(`Created movie: ${movie.title}`);
-    }
-    console.log("Database seeding completed.");
-}
+  console.log("Deleting all movies...");
+
+  const result = await prisma.movie.deleteMany();
+
+  console.log(`Deleted ${result.count} movies.`);
+};
+
 
 main()
     .catch((error) => {
@@ -124,3 +122,5 @@ main()
     .finally(async () => {
         await prisma.$disconnect();
     });
+
+*/

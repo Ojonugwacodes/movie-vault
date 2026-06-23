@@ -36,24 +36,24 @@ model Movie {
   createdAt   DateTime @default(now()) 
 
   creator User  @relation("MovieCreator", fields: [createdBy], references: [id], onDelete: Cascade)
-  watchlistItems WatchlistItem[]
 }
 
 model WatchlistItem {
   id        String   @id @default(uuid())
-  userId    String   
-  movieId   String   
+  userId    String
+  tmdbId   String
+  title    String
   status    WatchlistStatus @default(PLANNED)
   rating    Int?
+  favorite  Boolean @default(false)
   notes     String?
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @default(now()) 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   // Relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, movieId])
+  @@unique([userId, tmdbId])
 }
 
 enum WatchlistStatus {
@@ -63,4 +63,4 @@ enum WatchlistStatus {
   DROPPED
 }
 
-// USER -> MOVIE -> WATCHLIST
+// USER -> WATCHLIST (tmdbId/title come straight from the TMDB API, no local Movie row required)

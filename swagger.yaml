@@ -76,9 +76,10 @@ components:
         userId:
           type: string
           format: uuid
-        movieId:
+        tmdbId:
           type: string
-          format: uuid
+        title:
+          type: string
         status:
           type: string
           enum: [PLANNED, WATCHING, COMPLETED, DROPPED]
@@ -249,6 +250,8 @@ paths:
     delete:
       tags: [Auth]
       summary: Delete a user
+      security:
+        - BearerAuth: []
       parameters:
         - in: path
           name: id
@@ -256,7 +259,7 @@ paths:
           schema:
             type: string
             format: uuid
-          description: The user ID
+          description: The user ID (must match the authenticated user)
       responses:
         "200":
           description: User deleted successfully
@@ -271,6 +274,18 @@ paths:
                   message:
                     type: string
                     example: User deleted successfully
+        "401":
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Not allowed to delete this user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "500":
           description: Failed to delete user
           content:
@@ -290,12 +305,14 @@ paths:
           application/json:
             schema:
               type: object
-              required: [movieId]
+              required: [tmdbId, title]
               properties:
-                movieId:
+                tmdbId:
                   type: string
-                  format: uuid
-                  example: 550e8400-e29b-41d4-a716-446655440000
+                  example: "603"
+                title:
+                  type: string
+                  example: The Matrix
                 status:
                   type: string
                   enum: [PLANNED, WATCHING, COMPLETED, DROPPED]
@@ -332,12 +349,6 @@ paths:
                 $ref: "#/components/schemas/Error"
         "401":
           description: Not authorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "404":
-          description: Movie not found
           content:
             application/json:
               schema:

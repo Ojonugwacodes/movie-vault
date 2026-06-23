@@ -59,10 +59,11 @@ const login = async (req,res) => {
         if(!user){
             return res.status(400).json({error: "Invalid email or password"});
         };
+        
         // Compare password
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if(!isPasswordValid){
-            return res.status(400).json({error: "Invalid email or password"});
+            return res.status(400).json({error: "Invalid password"});
         };
         // Generate JWT token
         const token = generateToken(user.id, res);
@@ -97,6 +98,9 @@ const logout = (req, res) => {
 // Delete user
 const deleteUser = async (req, res) => {
     const userId = req.params.id;
+    if (userId !== req.user.id) {
+        return res.status(403).json({ error: "Not allowed to delete this user" });
+    }
     try {
         await prisma.user.delete({
             where: {

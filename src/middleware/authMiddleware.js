@@ -4,7 +4,6 @@ import {prisma} from '../config/db.js';
 // Read token from request header
 // Check if token is valid
 export const authMiddleware = async (req, res, next) => {
-    console.log("Auth middleware called");
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
         token = req.headers.authorization.split(" ")[1];;
