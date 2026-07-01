@@ -12,6 +12,7 @@ const swaggerDocument = yaml.parse(file);
 import authRoutes from "./routes/authRoutes.js";
 import watchListRoutes from "./routes/watchListRoutes.js";
 import landingPage from "./routes/landingPage.js";
+import recommendationRoutes from "./routes/recommendationRoutes.js";
 
 config();
 connectdb();
@@ -29,6 +30,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/", landingPage);
 app.use("/auth", authRoutes);
 app.use("/watchlist", watchListRoutes);
+app.use("/recommendations", recommendationRoutes);
 
 const PORT = process.env.PORT || 5001;
 

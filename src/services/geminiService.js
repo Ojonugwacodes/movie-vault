@@ -14,7 +14,7 @@ async function analyzePreferences(prompt) {
             responseMimeType: "application/json"
         }
     });
-    return JSON.parse(response.contents);
+    return JSON.parse(response.text);
     } catch(error){
         console.error("Error analyzing preferences:", error);
         throw error;

@@ -13,6 +13,8 @@ tags:
     description: User authentication (register, login, logout, delete)
   - name: Watchlist
     description: Manage your movie watchlist (requires authentication)
+  - name: Recommendations
+    description: AI-powered movie recommendations based on your watchlist (requires authentication)
 
 components:
   securitySchemes:
@@ -37,35 +39,27 @@ components:
           type: string
           format: date-time
 
-    Movie:
+    Recommendation:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          description: TMDb movie ID
         title:
           type: string
         overview:
           type: string
           nullable: true
-        releaseYear:
-          type: integer
-        genres:
-          type: array
-          items:
-            type: string
-        runtime:
-          type: integer
-          nullable: true
-        posterUrl:
+        poster:
           type: string
           nullable: true
-        createdBy:
+          description: TMDb poster path (e.g. /abc123.jpg)
+        releaseDate:
           type: string
-          format: uuid
-        createdAt:
+          nullable: true
+        reason:
           type: string
-          format: date-time
+          description: AI-generated reason why this movie matches the user's taste
 
     WatchlistItem:
       type: object
@@ -105,6 +99,62 @@ components:
           type: string
 
 paths:
+  /watchlist/search:
+    get:
+      tags: [Watchlist]
+      summary: Search movies via TMDb
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: query
+          required: true
+          schema:
+            type: string
+          description: Movie title to search for
+          example: inception
+      responses:
+        "200":
+          description: List of movies matching the query
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        title:
+                          type: string
+                        overview:
+                          type: string
+                        release_date:
+                          type: string
+                        vote_average:
+                          type: number
+                        poster_path:
+                          type: string
+                          nullable: true
+        "401":
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Failed to search movies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /auth/register:
     post:
       tags: [Auth]
@@ -462,6 +512,41 @@ paths:
                 $ref: "#/components/schemas/Error"
         "404":
           description: Watchlist item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /recommendations:
+    get:
+      tags: [Recommendations]
+      summary: Get AI-powered movie recommendations
+      description: Returns up to 10 personalised movie recommendations based on your completed/liked watchlist items, powered by Google Gemini and TMDb popular movies.
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Recommendations generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Recommendation"
+        "401":
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Failed to generate recommendations
           content:
             application/json:
               schema:

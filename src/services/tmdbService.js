@@ -22,4 +22,22 @@ async function searchMovies(query) {
     }
 }
 
-export { searchMovies }
+async function getPopularMovies(page = 1) {
+  const response = await tmdb.get("/movie/popular", {
+    params: { page }
+  });
+
+  return response.data.results;
+}
+
+async function searchByGenre(genreId) {
+  const response = await tmdb.get("/discover/movie", {
+    params: {
+      with_genres: genreId
+    }
+  });
+
+  return response.data.results;
+}
+
+export { searchMovies, getPopularMovies, searchByGenre }
